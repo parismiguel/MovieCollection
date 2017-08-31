@@ -84,7 +84,18 @@ namespace MovieCollection
             app.UseIdentity();
 
 
-            // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
+            app.UseGoogleAuthentication(new GoogleOptions()
+            {
+                ClientId = "215057619001-2rh9egg7vpq22mupnbc3cfag61okbn17.apps.googleusercontent.com",
+                ClientSecret = "AZcb4chydiVjF0kt2YbRT7zX"
+            });
+
+            app.UseFacebookAuthentication(new FacebookOptions()
+            {
+                AppId = "112908609402958",
+                AppSecret = "0e49ec58bf42bdcf4991e895a8654423"
+            });
+
 
             app.UseMvc(routes =>
             {
@@ -131,7 +142,7 @@ namespace MovieCollection
                     Email = "parismiguel@gmail.com",
                 };
 
-                string adminPassword = "Esfuerzo1@";
+                string adminPassword = "Esfuerzo1";
 
                 var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
 
