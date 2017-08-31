@@ -161,17 +161,22 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
 <script>
-        $(function () {
-            $("#IdCategory").on("change", function () {
+    $(function () {
+        serieInit();
 
-                if ($("#IdCategory option:selected").text() == "Series") {
-                    $("#serieGroup").removeClass("hidden");
-                }
-                else {
-                    $("#serieGroup").addClass("hidden");
-                }
+            $("#IdCategory").on("change", function () {
+                serieInit();
             })
 
-        }) //End Init
+    }) //End Init
+
+    function serieInit() {
+        if ($("#IdCategory option:selected").text() == "Series") {
+            $("#serieGroup").removeClass("hidden");
+        }
+        else {
+            $("#serieGroup").addClass("hidden");
+        }
+    }
 </script>
 }
