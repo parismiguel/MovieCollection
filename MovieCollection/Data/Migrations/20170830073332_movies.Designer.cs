@@ -4,13 +4,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using MovieCollection.Data;
+using MovieCollection.Models;
 
 namespace MovieCollection.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170830073332_movies")]
+    partial class movies
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -194,19 +196,6 @@ namespace MovieCollection.Data.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("MovieCollection.Models.Genre", b =>
-                {
-                    b.Property<int>("IdGenre")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("GenreName")
-                        .IsRequired();
-
-                    b.HasKey("IdGenre");
-
-                    b.ToTable("Genres");
-                });
-
             modelBuilder.Entity("MovieCollection.Models.Movie", b =>
                 {
                     b.Property<int>("IdMovie")
@@ -224,8 +213,6 @@ namespace MovieCollection.Data.Migrations
                     b.Property<int?>("Episode");
 
                     b.Property<int>("IdCategory");
-
-                    b.Property<int>("IdGenre");
 
                     b.Property<string>("ImgURL");
 
@@ -259,8 +246,6 @@ namespace MovieCollection.Data.Migrations
                     b.HasKey("IdMovie");
 
                     b.HasIndex("IdCategory");
-
-                    b.HasIndex("IdGenre");
 
                     b.ToTable("Movies");
                 });
@@ -307,11 +292,6 @@ namespace MovieCollection.Data.Migrations
                     b.HasOne("MovieCollection.Models.Category", "Category")
                         .WithMany("Movies")
                         .HasForeignKey("IdCategory")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MovieCollection.Models.Genre", "Genre")
-                        .WithMany("Movies")
-                        .HasForeignKey("IdGenre")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

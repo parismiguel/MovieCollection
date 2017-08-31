@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using MovieCollection.Data;
 using MovieCollection.Models;
 using MovieCollection.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace MovieCollection
 {
@@ -43,8 +44,15 @@ namespace MovieCollection
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 7;
+            })
+                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
@@ -55,7 +63,7 @@ namespace MovieCollection
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public async void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IServiceProvider serviceProvider)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -75,6 +83,7 @@ namespace MovieCollection
 
             app.UseIdentity();
 
+
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
@@ -83,6 +92,66 @@ namespace MovieCollection
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            await CreateRoles(serviceProvider);
+
         }
+
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            //initializing custom roles 
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            string[] roleNames = { "Admin", "Member" };
+
+            IdentityResult roleResult;
+
+            foreach (var roleName in roleNames)
+            {
+                var roleExist = await RoleManager.RoleExistsAsync(roleName);
+                // ensure that the role does not exist
+                if (!roleExist)
+                {
+                    //create the roles and seed them to the database: 
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole(roleName));
+                }
+            }
+
+            // find the user with the admin email 
+            var _user = await UserManager.FindByEmailAsync("parismiguel@gmail.com");
+
+            // check if the user exists
+            if (_user == null)
+            {
+                //Here you could create the super admin who will maintain the web app
+                var poweruser = new ApplicationUser
+                {
+                    UserName = "parismiguel@gmail.com",
+                    Email = "parismiguel@gmail.com",
+                };
+
+                string adminPassword = "Esfuerzo1@";
+
+                var createPowerUser = await UserManager.CreateAsync(poweruser, adminPassword);
+
+                if (createPowerUser.Succeeded)
+                {
+                    //here we tie the new user to the role
+                    await UserManager.AddToRoleAsync(poweruser, "Admin");
+
+                }
+            }
+            else
+            {
+                var check = await UserManager.IsInRoleAsync(_user, "Admin");
+
+                if (check == false)
+                {
+                    await UserManager.AddToRoleAsync(_user, "Admin");
+                }
+            }
+        }
+
     }
 }

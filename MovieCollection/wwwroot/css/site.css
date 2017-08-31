@@ -3,6 +3,26 @@
     padding-bottom: 20px;
 }
 
+#footerCustom {
+    background-color: #222;
+    padding: 2rem 1rem 1rem 1rem;
+    color: gray;
+}
+
+.open > .dropdown-menu {
+    display: grid;
+}
+
+.open > .dropdown-menu a {
+    padding: .5rem 1rem;
+}
+
+.open > .dropdown-menu a:hover {
+    text-decoration: none;
+    background-color: lightgray;
+}
+
+
 /* Wrapping element */
 /* Set some basic padding to keep content from hitting the edges */
 .body-content {

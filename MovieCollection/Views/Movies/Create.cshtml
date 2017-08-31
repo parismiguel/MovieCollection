@@ -1,0 +1,148 @@
+﻿@model MovieCollection.Models.Movie
+@using MovieCollection.Models
+
+@{
+    ViewData["Title"] = "Nuevo Título";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Películas y Series</h4>
+        <hr />
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="MovieName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MovieName" class="form-control" />
+                <span asp-validation-for="MovieName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MovieAlias" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MovieAlias" class="form-control" />
+                <span asp-validation-for="MovieAlias" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MovieSequel" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MovieSequel" class="form-control" />
+                <span asp-validation-for="MovieSequel" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ImgURL" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ImgURL" class="form-control" />
+                <span asp-validation-for="ImgURL" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MegaLink" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MegaLink" class="form-control" />
+                <span asp-validation-for="MegaLink" class="text-danger"></span>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label asp-for="SpokenLanguage" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="SpokenLanguage" class="form-control" asp-items="Html.GetEnumSelectList<Language>()">
+                    <option selected="selected" value="">Seleccione...</option>
+                </select>
+                <span asp-validation-for="SpokenLanguage" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SubTitledLanguage" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="SubTitledLanguage" class="form-control" asp-items="Html.GetEnumSelectList<SubTitle>()">
+                    <option selected="selected" value="">Seleccione...</option>
+                </select>
+                <span asp-validation-for="SubTitledLanguage" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="QualityReference" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="QualityReference" class="form-control" asp-items="Html.GetEnumSelectList<Quality>()">
+                    <option selected="selected" value="">Seleccione...</option>
+                </select>
+                <span asp-validation-for="QualityReference" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Resolution" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Resolution" class="form-control" />
+                <span asp-validation-for="Resolution" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="IdCategory" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="IdCategory" class ="form-control" asp-items="ViewBag.IdCategory"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="IdGenre" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="IdGenre" class="form-control" asp-items="ViewBag.IdGenre"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Season" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Season" class="form-control" />
+                <span asp-validation-for="Season" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Episode" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Episode" class="form-control" />
+                <span asp-validation-for="Episode" class="text-danger"></span>
+            </div>
+        </div>
+       
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="Published" />
+                    <label asp-for="Published"></label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Grabar" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Regresar al Listado</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

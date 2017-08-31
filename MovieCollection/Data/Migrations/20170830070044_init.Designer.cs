@@ -8,9 +8,10 @@ using MovieCollection.Data;
 namespace MovieCollection.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170830070044_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -130,21 +131,13 @@ namespace MovieCollection.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("City");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<string>("Country");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
-
-                    b.Property<string>("FirstName");
-
-                    b.Property<string>("LastName");
 
                     b.Property<bool>("LockoutEnabled");
 
@@ -181,90 +174,6 @@ namespace MovieCollection.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("MovieCollection.Models.Category", b =>
-                {
-                    b.Property<int>("IdCategory")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired();
-
-                    b.HasKey("IdCategory");
-
-                    b.ToTable("Categories");
-                });
-
-            modelBuilder.Entity("MovieCollection.Models.Genre", b =>
-                {
-                    b.Property<int>("IdGenre")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("GenreName")
-                        .IsRequired();
-
-                    b.HasKey("IdGenre");
-
-                    b.ToTable("Genres");
-                });
-
-            modelBuilder.Entity("MovieCollection.Models.Movie", b =>
-                {
-                    b.Property<int>("IdMovie")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("Click");
-
-                    b.Property<DateTime>("DateCreated");
-
-                    b.Property<DateTime>("DateModified");
-
-                    b.Property<string>("Description")
-                        .IsRequired();
-
-                    b.Property<int?>("Episode");
-
-                    b.Property<int>("IdCategory");
-
-                    b.Property<int>("IdGenre");
-
-                    b.Property<string>("ImgURL");
-
-                    b.Property<string>("MegaLink");
-
-                    b.Property<string>("MovieAlias");
-
-                    b.Property<string>("MovieName")
-                        .IsRequired();
-
-                    b.Property<int>("MovieSequel");
-
-                    b.Property<string>("OuoLink");
-
-                    b.Property<bool>("Published");
-
-                    b.Property<int>("QualityReference");
-
-                    b.Property<string>("Resolution");
-
-                    b.Property<int?>("Season");
-
-                    b.Property<int>("SpokenLanguage");
-
-                    b.Property<int>("SubTitledLanguage");
-
-                    b.Property<string>("UserCreated");
-
-                    b.Property<string>("UserModified");
-
-                    b.HasKey("IdMovie");
-
-                    b.HasIndex("IdCategory");
-
-                    b.HasIndex("IdGenre");
-
-                    b.ToTable("Movies");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole")
@@ -299,19 +208,6 @@ namespace MovieCollection.Data.Migrations
                     b.HasOne("MovieCollection.Models.ApplicationUser")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MovieCollection.Models.Movie", b =>
-                {
-                    b.HasOne("MovieCollection.Models.Category", "Category")
-                        .WithMany("Movies")
-                        .HasForeignKey("IdCategory")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MovieCollection.Models.Genre", "Genre")
-                        .WithMany("Movies")
-                        .HasForeignKey("IdGenre")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
         }

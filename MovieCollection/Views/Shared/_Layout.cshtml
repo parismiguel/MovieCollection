@@ -1,10 +1,10 @@
-@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
+﻿@inject Microsoft.ApplicationInsights.AspNetCore.JavaScriptSnippet JavaScriptSnippet
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - MovieCollection</title>
+    <title>@ViewData["Title"] - MEGA Colección de Videos</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -17,6 +17,8 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
+
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -28,25 +30,41 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MovieCollection</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">MEGA Colección de Videos</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a></li>
+                    @*<li><a asp-area="" asp-controller="Home" asp-action="About">Nosotros</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contáctenos</a></li>*@
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Configuración
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a asp-area="" asp-controller="Movies" asp-action="Index">Películas</a>
+                                <a asp-area="" asp-controller="Categories" asp-action="Index">Categorías</a>
+                                <a asp-area="" asp-controller="Genres" asp-action="Index">Géneros</a>
+                            </div>
+                        </li>
+                    }
+
                 </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
     </nav>
     <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2017 - MovieCollection</p>
-        </footer>
+        @RenderBody()       
     </div>
+
+    <footer id="footerCustom">
+        <p>&copy; 2017 - Proyectos Innovadores EIRL</p>
+    </footer>
 
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
