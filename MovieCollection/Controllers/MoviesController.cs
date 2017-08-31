@@ -23,7 +23,7 @@ namespace MovieCollection.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre);
+            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre).Include(s => s.Serie);
 
             return View(await _movies.ToListAsync());
         }
@@ -39,6 +39,7 @@ namespace MovieCollection.Controllers
             var movie = await _context.Movies
                 .Include(m => m.Category)
                 .Include(g => g.Genre)
+                .Include(s => s.Serie)
                 .SingleOrDefaultAsync(m => m.IdMovie == id);
             if (movie == null)
             {
@@ -54,6 +55,7 @@ namespace MovieCollection.Controllers
         {
             ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName");
             ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName");
+            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName");
 
             Movie _movie = new Movie();
 
@@ -79,7 +81,11 @@ namespace MovieCollection.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
+
             ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
+            ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
+            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
+
             return View(movie);
         }
 
@@ -101,6 +107,7 @@ namespace MovieCollection.Controllers
 
             ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
             ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
+            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
 
             return View(movie);
         }
@@ -147,6 +154,7 @@ namespace MovieCollection.Controllers
 
             ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
             ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
+            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
 
             return View(movie);
         }

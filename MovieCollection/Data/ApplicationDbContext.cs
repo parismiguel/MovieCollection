@@ -26,5 +26,6 @@ namespace MovieCollection.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<Serie> Series { get; set; }
     }
 }

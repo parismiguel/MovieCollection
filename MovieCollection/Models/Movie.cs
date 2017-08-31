@@ -67,6 +67,10 @@ namespace MovieCollection.Models
         public int IdGenre { get; set; }
         public Genre Genre { get; set; }
 
+        [Display(Name = "Serie")]
+        public int? IdSerie { get; set; }
+        public Serie Serie { get; set; }
+
         [Display(Name = "Temporada")]
         public int? Season { get; set; }
 
@@ -115,6 +119,20 @@ namespace MovieCollection.Models
         [Required]
         [Display(Name = "Género")]
         public string GenreName { get; set; }
+
+        public IEnumerable<Movie> Movies { get; set; }
+    }
+
+    public class Serie
+    {
+        [Key]
+        public int IdSerie { get; set; }
+
+        [Required]
+        [Display(Name = "Serie")]
+        public string SerieName { get; set; }
+
+        public string OriginalName { get; set; }
 
         public IEnumerable<Movie> Movies { get; set; }
     }

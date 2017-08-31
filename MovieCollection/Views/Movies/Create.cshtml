@@ -35,13 +35,15 @@
                 <span asp-validation-for="MovieSequel" class="text-danger"></span>
             </div>
         </div>
+
         <div class="form-group">
             <label asp-for="Description" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" style="width:280px;height:100px"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
         </div>
+
         <div class="form-group">
             <label asp-for="ImgURL" class="col-md-2 control-label"></label>
             <div class="col-md-10">
@@ -94,13 +96,6 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="IdCategory" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="IdCategory" class ="form-control" asp-items="ViewBag.IdCategory"></select>
-            </div>
-        </div>
-
-        <div class="form-group">
             <label asp-for="IdGenre" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <select asp-for="IdGenre" class="form-control" asp-items="ViewBag.IdGenre"></select>
@@ -108,17 +103,35 @@
         </div>
 
         <div class="form-group">
-            <label asp-for="Season" class="col-md-2 control-label"></label>
+            <label asp-for="IdCategory" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Season" class="form-control" />
-                <span asp-validation-for="Season" class="text-danger"></span>
+                <select asp-for="IdCategory" class ="form-control" asp-items="ViewBag.IdCategory"></select>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Episode" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Episode" class="form-control" />
-                <span asp-validation-for="Episode" class="text-danger"></span>
+
+        <div id="serieGroup" class="hidden">
+            <div class="form-group">
+                <label asp-for="IdSerie" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <select asp-for="IdSerie" class="form-control" asp-items="ViewBag.IdSerie">
+                        <option selected="selected" value="">Seleccione...</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Season" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Season" class="form-control" />
+                    <span asp-validation-for="Season" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Episode" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Episode" class="form-control" />
+                    <span asp-validation-for="Episode" class="text-danger"></span>
+                </div>
             </div>
         </div>
        
@@ -145,4 +158,19 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(function () {
+            $("#IdCategory").on("change", function () {
+
+                if ($("#IdCategory option:selected").text() == "Series") {
+                    $("#serieGroup").removeClass("hidden");
+                }
+                else {
+                    $("#serieGroup").addClass("hidden");
+                }
+            })
+
+        }) //End Init
+    </script>
 }
