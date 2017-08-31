@@ -34,6 +34,7 @@ namespace MovieCollection.Models
         [Display(Name = "Alias")]
         public string MovieAlias { get; set; }
 
+        [Display(Name = "Secuela")]
         public int MovieSequel { get; set; }
 
         [Required]
@@ -55,6 +56,7 @@ namespace MovieCollection.Models
         [Display(Name = "Calidad")]
         public Quality QualityReference { get; set; }
 
+        [Display(Name = "Resolución")]
         public string Resolution { get; set; }
 
         [Display(Name = "Categoría")]
@@ -73,13 +75,19 @@ namespace MovieCollection.Models
        
         public int Click { get; set; }
 
+        [Display(Name = "Publicar?")]
         public bool Published { get; set; }
 
         [Display(Name = "Fecha Creación")]
         public DateTime DateCreated { get; set; }
+
+        [Display(Name = "Fecha Modificación")]
         public DateTime DateModified { get; set; }
 
+        [Display(Name = "Usuario Creación")]
         public string UserCreated { get; set; }
+
+        [Display(Name = "Fecha Modificación")]
         public string UserModified { get; set; }
 
     }

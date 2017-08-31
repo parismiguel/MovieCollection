@@ -10,18 +10,18 @@ namespace MovieCollection.Models.AccountViewModels
     {
         [Required]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Correo Electrónico")]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La {0} debe tener mínimo {2} y máximo {1} carcateres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Clave")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirmar Clave")]
+        [Compare("Password", ErrorMessage = "La Clave y la Confirmación de Clave no coinciden")]
         public string ConfirmPassword { get; set; }
     }
 }

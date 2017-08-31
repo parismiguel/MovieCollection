@@ -10,13 +10,15 @@ namespace MovieCollection.Models.AccountViewModels
     {
         [Required]
         [EmailAddress]
+        [Display(Name = "Correo Electrónico")]
         public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name = "Clave")]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Recordarme?")]
         public bool RememberMe { get; set; }
     }
 }
