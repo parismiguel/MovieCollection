@@ -78,6 +78,9 @@ namespace MovieCollection.Models
         [Display(Name = "Publicar?")]
         public bool Published { get; set; }
 
+        [Display(Name = "Fecha Estreno")]
+        public DateTime? DatePremiere { get; set; }
+
         [Display(Name = "Fecha Creación")]
         public DateTime DateCreated { get; set; }
 
@@ -128,7 +131,8 @@ namespace MovieCollection.Models
     {
         Español,
         Ingles,
-        Dual
+        Dual,
+        Ninguno
     }
 
     public enum Quality
