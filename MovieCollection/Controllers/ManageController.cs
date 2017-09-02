@@ -45,12 +45,12 @@ namespace MovieCollection.Controllers
         public async Task<IActionResult> Index(ManageMessageId? message = null)
         {
             ViewData["StatusMessage"] =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                message == ManageMessageId.ChangePasswordSuccess ? "Su Clave ha sido actualizada"
+                : message == ManageMessageId.SetPasswordSuccess ? "Se ha registrado su Clave"
+                : message == ManageMessageId.SetTwoFactorSuccess ? "Se ha establecido su validación de 2 pasos"
+                : message == ManageMessageId.Error ? "Ha ocurrido un error"
+                : message == ManageMessageId.AddPhoneSuccess ? "Se agregó su teléfono"
+                : message == ManageMessageId.RemovePhoneSuccess ? "Se eliminó su telefono"
                 : "";
 
             var user = await GetCurrentUserAsync();
@@ -281,9 +281,9 @@ namespace MovieCollection.Controllers
         public async Task<IActionResult> ManageLogins(ManageMessageId? message = null)
         {
             ViewData["StatusMessage"] =
-                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.AddLoginSuccess ? "The external login was added."
-                : message == ManageMessageId.Error ? "An error has occurred."
+                message == ManageMessageId.RemoveLoginSuccess ? "Acceso externo eliminado."
+                : message == ManageMessageId.AddLoginSuccess ? "Acceso externo agregado"
+                : message == ManageMessageId.Error ? "Ha ocurrido un error"
                 : "";
             var user = await GetCurrentUserAsync();
             if (user == null)

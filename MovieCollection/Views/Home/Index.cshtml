@@ -151,7 +151,17 @@
                     <div class="card bg-dark text-white">
                         <img class="card-img" src="@Html.DisplayFor(modelItem => item.ImgURL)" alt="@Html.DisplayFor(modelItem => item.MovieName)" />
                         <div class="card-img-overlay">
-                            <h4 class="card-title">@Html.DisplayFor(modelItem => item.MovieName)</h4>
+                            @if (item.IdSerie != null)
+                            {
+                                <h3 class="card-title">@Html.DisplayFor(modelItem => item.Serie.SerieName)</h3>
+                                <h6>@Html.DisplayFor(modelItem => item.MovieName)</h6>
+                                <h6>Temporada: @Html.DisplayFor(modelItem => item.Season) - Episodio. @Html.DisplayFor(modelItem => item.Episode)</h6>
+                            }
+                            else
+                            {
+                                <h3 class="card-title">@Html.DisplayFor(modelItem => item.MovieName)</h3>
+                            }
+
                             <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
                             <div>
                                 <a class="btn btn-primary" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)">Descargar</a>
