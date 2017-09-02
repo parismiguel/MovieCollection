@@ -60,6 +60,14 @@
         </div>
 
         <div class="form-group">
+            <label asp-for="DatePremiere" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DatePremiere" class="form-control" type="date" />
+                <span asp-validation-for="DatePremiere" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
             <label asp-for="SpokenLanguage" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <select asp-for="SpokenLanguage" class="form-control" asp-items="Html.GetEnumSelectList<Language>()">

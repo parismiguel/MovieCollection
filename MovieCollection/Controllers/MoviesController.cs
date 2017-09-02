@@ -23,7 +23,8 @@ namespace MovieCollection.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre).Include(s => s.Serie);
+            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre)
+                .Include(s => s.Serie).OrderByDescending(d=>d.DateCreated);
 
             return View(await _movies.ToListAsync());
         }
@@ -188,6 +189,7 @@ namespace MovieCollection.Controllers
             var movie = await _context.Movies.SingleOrDefaultAsync(m => m.IdMovie == id);
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 

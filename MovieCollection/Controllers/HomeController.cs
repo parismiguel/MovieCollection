@@ -20,7 +20,8 @@ namespace MovieCollection.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre).OrderByDescending(o => o.DateCreated);
+            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre)
+                .OrderByDescending(o => o.DatePremiere).Take(12);
 
             return View(await _movies.ToListAsync());
         }
