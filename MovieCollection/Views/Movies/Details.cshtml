@@ -2,8 +2,12 @@
 
 @section Styles{
     <style>
+        dd {
+            margin-bottom:1rem;
+        }
+
         dd > img {
-            width: 7rem;
+            width: 10rem;
         }
     </style>
 }
@@ -21,15 +25,20 @@
         <dt>
             @Html.DisplayNameFor(model => model.MovieName)
         </dt>
-        <dd>
+        <dd class="alert alert-success">
             @Html.DisplayFor(model => model.MovieName)
         </dd>
+
+       @if (Model.MovieAlias != null)
+       {
         <dt>
             @Html.DisplayNameFor(model => model.MovieAlias)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.MovieAlias)
         </dd>
+       }
+
         <dt>
             @Html.DisplayNameFor(model => model.MovieSequel)
         </dt>
@@ -42,6 +51,24 @@
         <dd>
             @Html.DisplayFor(model => model.Category.CategoryName)
         </dd>
+
+        @if (Model.IdSerie != null)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.Serie.SerieName)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Serie.SerieName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Season) / @Html.DisplayNameFor(model => model.Episode)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Season) / @Html.DisplayFor(model => model.Episode)
+            </dd>
+        }
+      
+
         <dt>
             @Html.DisplayNameFor(model => model.Genre.GenreName)
         </dt>
@@ -51,7 +78,7 @@
         <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
-        <dd>
+        <dd class="alert alert-info">
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt>
@@ -64,19 +91,15 @@
             @Html.DisplayNameFor(model => model.DatePremiere)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.DatePremiere)
+            @String.Format("{0:dd-MMM-yyyy}", Model.DatePremiere)
+            @*@Html.DisplayFor(model => model.DatePremiere)*@
         </dd>
+      
         <dt>
-            @Html.DisplayNameFor(model => model.MegaLink)
+            Link
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.MegaLink)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.OuoLink)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.OuoLink)
+            <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(model => model.OuoLink)">Descargar</a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.SpokenLanguage)
@@ -101,54 +124,6 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Resolution)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Season)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Season)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Episode)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Episode)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Click)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Click)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Published)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Published)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DateCreated)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DateCreated)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DateModified)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DateModified)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UserCreated)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UserCreated)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UserModified)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UserModified)
         </dd>
       
     </dl>

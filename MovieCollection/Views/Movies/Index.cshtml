@@ -1,6 +1,10 @@
-﻿@model IEnumerable<MovieCollection.Models.Movie>
+﻿@*@model IEnumerable<MovieCollection.Models.Movie>*@
 
-@section Styles{ 
+@using MovieCollection.Helpers
+@model PaginatedList<MovieCollection.Models.Movie>
+@{ var reference = new Movie(); }
+
+@section Styles{
     <style>
         td > img {
             width: 7rem;
@@ -22,30 +26,44 @@
 
 }
 
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Buscar Película: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
+            <input type="submit" value="Buscar" class="btn btn-warning" />
+            <a asp-action="Index">Regresar al Listado Completo</a>
+        </p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ImgURL)
-            </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.MovieName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SpokenLanguage)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.SubTitledLanguage)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.QualityReference)
-                </th>
+                @Html.DisplayNameFor(x => reference.ImgURL)
                 
-            <th>
-                @Html.DisplayNameFor(model => model.Category.CategoryName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Genre.GenreName)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.MovieName)</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(x => reference.SpokenLanguage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(x => reference.SubTitledLanguage)
+            </th>
+            <th>
+                @Html.DisplayNameFor(x => reference.QualityReference)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(x => reference.Category.CategoryName)
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["GenreSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.Genre.GenreName)</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(x => reference.DatePremiere)
             </th>
             <th>
                 Link
@@ -54,46 +72,73 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <img src="@Html.DisplayFor(modelItem => item.ImgURL)" alt="@Html.DisplayFor(modelItem => item.MovieName)" />
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MovieName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SpokenLanguage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubTitledLanguage)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.QualityReference)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre.GenreName)
-            </td>
-            <td>
-                <a class="btn btn-primary" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)">Descargar</a>
-            </td>
-            <td>
-               @if (User.IsInRole("Admin"))
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="@Html.DisplayFor(modelItem => item.ImgURL)" alt="@Html.DisplayFor(modelItem => item.MovieName)" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MovieName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SpokenLanguage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubTitledLanguage)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QualityReference)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre.GenreName)
+                </td>
+                <td>
+                    @String.Format("{0:dd-MMM-yyyy}", item.DatePremiere)
+                </td>
+                <td>
+                    <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)">Descargar</a>
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin"))
                 {
-                    <a asp-action="Edit" asp-route-id="@item.IdMovie">Editar</a>
-                    <a asp-action="Details" asp-route-id="@item.IdMovie">Detalles</a>
-                    <a asp-action="Delete" asp-route-id="@item.IdMovie">Borrar</a>
-               }
-               else
-               {
-                    <a asp-action="Details" asp-route-id="@item.IdMovie">Detalles</a>
-               }
+                        <a asp-action="Edit" asp-route-id="@item.IdMovie">Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.IdMovie">Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdMovie">Borrar</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.IdMovie">Detalles</a>
+                    }
 
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<div style="margin-bottom:2rem;">
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-primary @prevDisabled">
+        Anterior
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-page="@(Model.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-primary @nextDisabled">
+        Siguiente
+    </a>
+    <span>Mostrando página @Model.PageIndex de @Model.TotalPages [Para un total de @Model.TotalCount películas]</span>
+</div>

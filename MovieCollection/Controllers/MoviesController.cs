@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieCollection.Data;
 using MovieCollection.Models;
 using Microsoft.AspNetCore.Authorization;
+using MovieCollection.Helpers;
 
 namespace MovieCollection.Controllers
 {
@@ -21,13 +22,57 @@ namespace MovieCollection.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre)
-                .Include(s => s.Serie).OrderByDescending(d=>d.DateCreated);
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
+            ViewData["GenreSortParm"] = sortOrder == "Genre" ? "genre_desc" : "Genre";
+            
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
 
-            return View(await _movies.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+
+            var _movies = _context.Movies.Include(m => m.Category).Include(g => g.Genre)
+                           .Include(s => s.Serie).OrderByDescending(d => d.DateCreated);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                _movies = _movies.Where(s => s.MovieName.Contains(searchString))
+                    .OrderByDescending(d => d.DateCreated);
+            }
+
+            switch (sortOrder)
+            {
+                case "title_desc":
+                    _movies = _movies.OrderByDescending(s => s.MovieName);
+                    break;
+                case "Genre":
+                    _movies = _movies.OrderBy(s => s.Genre);
+                    break;
+                case "genre_desc":
+                    _movies = _movies.OrderByDescending(s => s.Genre);
+                    break;
+                default:
+                    _movies = _movies.OrderBy(s => s.MovieName);
+                    break;
+            }
+
+            int pageSize = 7;
+
+            var test = await _movies.AsNoTracking().ToListAsync();
+            var test2 = await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize);
+
+            return View(await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize));
         }
+
+
 
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
