@@ -63,7 +63,8 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["GenreSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.Genre.GenreName)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(x => reference.DatePremiere)
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.DatePremiere)</a>
+                @*@Html.DisplayNameFor(x => reference.DatePremiere)*@
             </th>
             <th>
                 Link

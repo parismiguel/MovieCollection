@@ -27,7 +27,8 @@ namespace MovieCollection.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             ViewData["GenreSortParm"] = sortOrder == "Genre" ? "genre_desc" : "Genre";
-            
+            ViewData["DateSortParm"] = sortOrder == "DatePremiere" ? "datepremiere_desc" : "DatePremiere";
+
             if (searchString != null)
             {
                 page = 1;
@@ -58,6 +59,13 @@ namespace MovieCollection.Controllers
                     break;
                 case "genre_desc":
                     _movies = _movies.OrderByDescending(s => s.Genre);
+                    break;
+                case "DatePremiere":
+                    _movies = _movies.OrderBy(s => s.DatePremiere);
+                    break;
+
+                case "datepremiere_desc":
+                    _movies = _movies.OrderByDescending(s => s.DatePremiere);
                     break;
                 default:
                     _movies = _movies.OrderBy(s => s.MovieName);
