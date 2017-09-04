@@ -132,6 +132,9 @@ namespace MovieCollection
             // find the user with the admin email 
             var _user = await UserManager.FindByEmailAsync("parismiguel@gmail.com");
 
+            //var daya = await UserManager.FindByEmailAsync("dayavic30mos@hotmail.com");
+            //await UserManager.AddToRoleAsync(daya, "Admin");
+
             // check if the user exists
             if (_user == null)
             {

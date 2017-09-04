@@ -77,6 +77,13 @@
         div.card:hover .card-img-overlay {
             visibility: visible;
         }
+
+        .truncate {
+            width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 }
 
@@ -162,9 +169,18 @@
                                 <h3 class="card-title">@Html.DisplayFor(modelItem => item.MovieName)</h3>
                             }
 
-                            <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+                            @if (item.Description.ToString().Length > 350)
+                            {
+                                <p class="card-text">@item.Description.ToString().Substring(0, 350)...</p>
+                            }
+                            else
+                            {
+                                <p class="card-text">@Html.DisplayFor(modelItem => item.Description)</p>
+                            }
+
                             <div>
-                                <a class="btn btn-primary" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)">Descargar</a>
+                                <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)">Descargar</a>
+                                <a class="btn btn-primary" asp-action="Details" asp-controller="Movies" asp-route-id="@item.IdMovie">Detalles</a>
                             </div>
                         </div>
                     </div>
