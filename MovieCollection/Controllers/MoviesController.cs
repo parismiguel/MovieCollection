@@ -126,6 +126,20 @@ namespace MovieCollection.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                if (!IsValidUri(movie.ImgURL))
+                {
+                    ViewData["ErrorURL"] = String.Format("Imagen: {0} es una URL inválida", movie.ImgURL);
+                    return View(movie);
+                }
+
+                if (!IsValidUri(movie.MegaLink))
+                {
+                    ViewData["ErrorURL"] += String.Format("Mega: {0} es una URL inválida", movie.MegaLink);
+
+                    return View(movie);
+                }
+
                 movie.UserCreated = User.Identity.Name;
                 movie.UserModified = User.Identity.Name;
 
@@ -183,10 +197,23 @@ namespace MovieCollection.Controllers
             {
                 try
                 {
+                    if (!IsValidUri(movie.ImgURL))
+                    {
+                        ViewData["ErrorURL"] = String.Format("Imagen: {0} es una URL inválida", movie.ImgURL);
+                        return View(movie);
+                    }
+
+                    if (!IsValidUri(movie.MegaLink))
+                    {
+                        ViewData["ErrorURL"] += String.Format("Mega: {0} es una URL inválida", movie.MegaLink);
+
+                        return View(movie);
+                    }
+
                     movie.DateModified = DateTime.Today;
                     movie.UserModified = User.Identity.Name;
 
-                    movie.OuoLink = string.Format("http://ouo.io/s/mcTIrdpj?s={0}", movie.MegaLink);
+                    movie.OuoLink = string.Format("http://ouo.io/s/mcTIrdpj?s={0}", System.Net.WebUtility.UrlEncode(movie.MegaLink));
 
                     _context.Update(movie);
 
@@ -249,6 +276,12 @@ namespace MovieCollection.Controllers
         private bool MovieExists(int id)
         {
             return _context.Movies.Any(e => e.IdMovie == id);
+        }
+
+        public bool IsValidUri(string uri)
+        {
+            Uri validatedUri;
+            return Uri.TryCreate(uri, UriKind.RelativeOrAbsolute, out validatedUri);
         }
     }
 }
