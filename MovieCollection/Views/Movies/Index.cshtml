@@ -21,7 +21,7 @@
 @if (User.IsInRole("Admin"))
 {
     <p>
-        <a asp-action="Create">Nuevo</a>
+        <a asp-action="Create"><i class="fa fa-plus-circle"></i> Nuevo</a>
     </p>
 
 }
@@ -30,8 +30,13 @@
     <div class="form-actions no-color">
         <p>
             Buscar Película: <input type="text" name="SearchString" value="@ViewData["currentFilter"]" />
-            <input type="submit" value="Buscar" class="btn btn-warning" />
-            <a asp-action="Index">Regresar al Listado Completo</a>
+            @*<div style="position:relative">
+                <i class="fa fa-search" style="position: absolute; top: 10px; left: 50px;"></i>
+                <input type="submit" value="Buscar" class="btn btn-warning" />
+            </div>*@
+            @*<input type="submit" value="Buscar" class="btn btn-warning" />*@
+            <button type="submit" class="btn btn-warning"><i class="fa fa-search"></i> Buscar</button>
+            <a asp-action="Index"><i class="fa fa-refresh"></i> Refrescar</a>
         </p>
     </div>
 </form>
@@ -41,7 +46,7 @@
         <tr>
             <th>
                 @Html.DisplayNameFor(x => reference.ImgURL)
-                
+
             </th>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["TitleSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.MovieName)</a>
@@ -63,9 +68,13 @@
                 <a asp-action="Index" asp-route-sortOrder="@ViewData["GenreSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.Genre.GenreName)</a>
             </th>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.DatePremiere)</a>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DatePremiereSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.DatePremiere)</a>
                 @*@Html.DisplayNameFor(x => reference.DatePremiere)*@
             </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateCreatedSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]">@Html.DisplayNameFor(x => reference.DateCreated)</a>
+            </th>
+
             <th>
                 Link
             </th>
@@ -101,18 +110,21 @@
                     @String.Format("{0:dd-MMM-yyyy}", item.DatePremiere)
                 </td>
                 <td>
-                    <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)">Descargar</a>
+                    @String.Format("{0:dd-MMM-yyyy}", item.DateCreated)
                 </td>
                 <td>
+                    <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)"><i class="fa fa-cloud-download"></i> Descargar</a>
+                </td>
+                <td style="display:inline-grid; width: 9rem;">
                     @if (User.IsInRole("Admin"))
                 {
-                        <a asp-action="Edit" asp-route-id="@item.IdMovie">Editar</a>
-                        <a asp-action="Details" asp-route-id="@item.IdMovie">Detalles</a>
-                        <a asp-action="Delete" asp-route-id="@item.IdMovie">Borrar</a>
+                        <a asp-action="Edit" asp-route-id="@item.IdMovie"><i class="fa fa-pencil-square-o"></i> Editar</a>
+                        <a asp-action="Details" asp-route-id="@item.IdMovie"><i class="fa fa-eye"></i> Detalles</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdMovie"><i class="fa fa-trash"></i> Borrar</a>
                     }
                     else
                     {
-                        <a asp-action="Details" asp-route-id="@item.IdMovie">Detalles</a>
+                        <a asp-action="Details" asp-route-id="@item.IdMovie"><i class="fa fa-eye"></i> Detalles</a>
                     }
 
                 </td>

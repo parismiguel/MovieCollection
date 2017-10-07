@@ -27,7 +27,8 @@ namespace MovieCollection.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             ViewData["GenreSortParm"] = sortOrder == "Genre" ? "genre_desc" : "Genre";
-            ViewData["DateSortParm"] = sortOrder == "DatePremiere" ? "datepremiere_desc" : "DatePremiere";
+            ViewData["DatePremiereSortParm"] = sortOrder == "DatePremiere" ? "datepremiere_desc" : "DatePremiere";
+            ViewData["DateCreatedSortParm"] = sortOrder == "DateCreated" ? "datecreated_desc" : "DateCreated";
 
             if (searchString != null)
             {
@@ -67,15 +68,23 @@ namespace MovieCollection.Controllers
                 case "datepremiere_desc":
                     _movies = _movies.OrderByDescending(s => s.DatePremiere);
                     break;
+
+                case "DateCreated":
+                    _movies = _movies.OrderBy(s => s.DateCreated);
+                    break;
+
+                case "datecreated_desc":
+                    _movies = _movies.OrderByDescending(s => s.DateCreated);
+                    break;
                 default:
-                    _movies = _movies.OrderBy(s => s.MovieName);
+                    _movies = _movies.OrderBy(s => s.MovieName).OrderByDescending(s => s.DateCreated);
                     break;
             }
 
             int pageSize = 7;
 
-            var test = await _movies.AsNoTracking().ToListAsync();
-            var test2 = await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize);
+            //var test = await _movies.AsNoTracking().ToListAsync();
+            //var test2 = await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize);
 
             return View(await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize));
         }
@@ -212,6 +221,8 @@ namespace MovieCollection.Controllers
 
                     movie.DateModified = DateTime.Today;
                     movie.UserModified = User.Identity.Name;
+
+
 
                     movie.OuoLink = string.Format("http://ouo.io/s/mcTIrdpj?s={0}", System.Net.WebUtility.UrlEncode(movie.MegaLink));
 

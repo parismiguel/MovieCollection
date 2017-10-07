@@ -6,10 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MEGA Colección de Videos</title>
 
+    <script src="https://use.fontawesome.com/db394f1511.js"></script>
+
+    <link href="~/css/animate.css" rel="stylesheet" />
+
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
+
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
@@ -35,15 +40,17 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a></li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Inicio</a></li>
+                    <li><a asp-area="" asp-controller="Movies" asp-action="Index"><i class="fa fa-film"></i> Películas</a></li>
+
                     @*<li><a asp-area="" asp-controller="Home" asp-action="About">Nosotros</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contáctenos</a></li>*@
+                        <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contáctenos</a></li>*@
 
                     @if (User.IsInRole("Admin"))
                     {
                         <li>
                             <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Configuración
+                                <i class="fa fa-lock"></i> Configuración
                             </a>
 
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
@@ -61,7 +68,7 @@
         </div>
     </nav>
     <div class="container body-content">
-        @RenderBody()       
+        @RenderBody()
     </div>
 
     <footer id="footerCustom">
