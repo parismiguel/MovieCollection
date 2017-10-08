@@ -133,8 +133,17 @@ namespace MovieCollection.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Movie movie)
         {
+            ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
+            ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
+            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
+
             if (ModelState.IsValid)
             {
+                if (movie.IdCategory == 2 && movie.IdSerie == null)
+                {
+                    ViewData["ErrorURL"] = String.Format("Para la Categoría SERIES debe seleccionar una de la lista de SERIES o CREAR una nueva");
+                    return View(movie);
+                }
 
                 if (!IsValidUri(movie.ImgURL))
                 {
@@ -159,9 +168,6 @@ namespace MovieCollection.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
-            ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
-            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
 
             return View(movie);
         }

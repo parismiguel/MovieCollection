@@ -13,7 +13,7 @@
 }
 
 @{
-    ViewData["Title"] = "Detalles de Título";
+    ViewData["Title"] = Model.MovieName;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -99,7 +99,7 @@
             Link
         </dt>
         <dd>
-            <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(model => model.OuoLink)">Descargar</a>
+            <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(model => model.OuoLink)"><i class="fa fa-cloud-download"></i> Descargar</a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.SpokenLanguage)
@@ -131,7 +131,8 @@
 <div>
    @if (User.IsInRole("Admin"))
    {
-        <a asp-action="Edit" asp-route-id="@Model.IdMovie">Editar</a>
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdMovie"><i class="fa fa-pencil"></i> Editar</a>
     }
-    <a asp-action="Index">Regresar al Listado</a>
+    <a asp-action="Index"><i class="fa fa-undo"></i> Regresar al Listado</a>
 </div>
+<hr />

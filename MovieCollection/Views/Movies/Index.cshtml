@@ -89,7 +89,17 @@
                     <img src="@Html.DisplayFor(modelItem => item.ImgURL)" alt="@Html.DisplayFor(modelItem => item.MovieName)" />
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MovieName)
+
+                    @if (item.IdSerie != null)
+                    {
+                        <a asp-action="Details" asp-route-id="@item.IdMovie">@string.Format("{0} - S{1}E{2} ({3})", item.Serie.SerieName, item.Season, item.Episode, item.MovieName)</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Details" asp-route-id="@item.IdMovie">@item.MovieName</a>
+                    }
+
+
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.SpokenLanguage)
@@ -118,7 +128,7 @@
                 <td style="display:inline-grid; width: 9rem;">
                     @if (User.IsInRole("Admin"))
                 {
-                        <a asp-action="Edit" asp-route-id="@item.IdMovie"><i class="fa fa-pencil-square-o"></i> Editar</a>
+                        <a asp-action="Edit" asp-route-id="@item.IdMovie"><i class="fa fa-pencil"></i> Editar</a>
                         <a asp-action="Details" asp-route-id="@item.IdMovie"><i class="fa fa-eye"></i> Detalles</a>
                         <a asp-action="Delete" asp-route-id="@item.IdMovie"><i class="fa fa-trash"></i> Borrar</a>
                     }

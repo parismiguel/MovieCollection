@@ -11,7 +11,10 @@
         <h4>Películas y Series</h4>
         <hr />
 
-        <div class="alert alert-danger">@ViewData["ErrorURL"]</div>
+        @if (ViewData["ErrorURL"] != null)
+        {
+            <div class="alert alert-danger">@ViewData["ErrorURL"]</div>
+        }
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -164,14 +167,12 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Modificar" class="btn btn-danger" />
+                <a asp-action="Index"><i class="fa fa-undo"></i> Regresar al Listado</a>
             </div>
         </div>
     </div>
 </form>
 
-<div>
-    <a asp-action="Index">Regresar al Listado</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

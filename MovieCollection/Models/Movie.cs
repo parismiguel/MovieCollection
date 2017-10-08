@@ -132,6 +132,7 @@ namespace MovieCollection.Models
         [Display(Name = "Serie")]
         public string SerieName { get; set; }
 
+        [Display(Name = "Nombre Original")]
         public string OriginalName { get; set; }
 
         public IEnumerable<Movie> Movies { get; set; }
