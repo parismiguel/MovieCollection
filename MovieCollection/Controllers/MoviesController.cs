@@ -9,6 +9,10 @@ using MovieCollection.Data;
 using MovieCollection.Models;
 using Microsoft.AspNetCore.Authorization;
 using MovieCollection.Helpers;
+using System.IO;
+using System.Net;
+using SixLabors.ImageSharp;
+using System.Net.Http;
 
 namespace MovieCollection.Controllers
 {
@@ -139,6 +143,7 @@ namespace MovieCollection.Controllers
 
             if (ModelState.IsValid)
             {
+               
                 if (movie.IdCategory == 2 && movie.IdSerie == null)
                 {
                     ViewData["ErrorURL"] = String.Format("Para la Categoría SERIES debe seleccionar una de la lista de SERIES o CREAR una nueva");
@@ -150,6 +155,13 @@ namespace MovieCollection.Controllers
                     ViewData["ErrorURL"] = String.Format("Imagen: {0} es una URL inválida", movie.ImgURL);
                     return View(movie);
                 }
+
+                if (await IsImageResolutionOK(movie.ImgURL))
+                {
+                    ViewData["ErrorURL"] = String.Format("La calidad de la imágen deben ser mínimo de 600x400");
+                    return View(movie);
+                }
+
 
                 if (!IsValidUri(movie.MegaLink))
                 {
@@ -299,6 +311,30 @@ namespace MovieCollection.Controllers
         {
             Uri validatedUri;
             return Uri.TryCreate(uri, UriKind.RelativeOrAbsolute, out validatedUri);
+        }
+
+        public async Task<bool> IsImageResolutionOK(string imgUrl)
+        {
+
+            using (HttpClient c = new HttpClient())
+            {
+                using (Stream s = await c.GetStreamAsync(imgUrl))
+                {
+                    using (Image<Rgba32> image = Image.Load(s))
+                    {
+                        if (image.Width >= 600 && image.Height >= 400)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+
         }
     }
 }
