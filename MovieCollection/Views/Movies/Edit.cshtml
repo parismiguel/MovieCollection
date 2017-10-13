@@ -11,11 +11,19 @@
         <h4>Películas y Series</h4>
         <hr />
 
-        <div class="alert alert-danger">@ViewData["ErrorURL"]</div>
+        @if (ViewData["ErrorURL"] != null)
+        {
+            <div class="alert alert-danger">@ViewData["ErrorURL"]</div>
+        }
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         <input type="hidden" asp-for="IdMovie" />
+
+        <input type="hidden" asp-for="UserCreated" />
+        <input type="hidden" asp-for="UserModified" />
+        <input type="hidden" asp-for="DateCreated" />
+        <input type="hidden" asp-for="DateModified" />
 
         <div class="form-group">
             <label asp-for="MovieName" class="col-md-2 control-label"></label>
@@ -159,14 +167,12 @@
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Modificar" class="btn btn-danger" />
+                <a asp-action="Index"><i class="fa fa-undo"></i> Regresar al Listado</a>
             </div>
         </div>
     </div>
 </form>
 
-<div>
-    <a asp-action="Index">Regresar al Listado</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

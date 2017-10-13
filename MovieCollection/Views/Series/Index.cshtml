@@ -1,13 +1,13 @@
 @model IEnumerable<MovieCollection.Models.Serie>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Listado de Series";
 }
 
-<h2>Index</h2>
+<h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"><i class="fa fa-plus-circle"></i> Nuevo</a>
 </p>
 <table class="table">
     <thead>
@@ -31,9 +31,10 @@
                 @Html.DisplayFor(modelItem => item.OriginalName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdSerie">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdSerie">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdSerie">Delete</a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdSerie"><i class="fa fa-pencil"></i> Editar</a>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.IdSerie"><i class="fa fa-eye"></i> Detalles</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdSerie"><i class="fa fa-trash"></i> Borrar</a>
+
             </td>
         </tr>
 }

@@ -179,8 +179,8 @@
                             }
 
                             <div>
-                                <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)">Descargar</a>
-                                <a class="btn btn-primary" asp-action="Details" asp-controller="Movies" asp-route-id="@item.IdMovie">Detalles</a>
+                                <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(modelItem => item.OuoLink)"><i class="fa fa-cloud-download"></i> Descargar</a>
+                                <a class="btn btn-primary" asp-action="Details" asp-controller="Movies" asp-route-id="@item.IdMovie"><i class="fa fa-eye"></i> Detalles</a>
                             </div>
                         </div>
                     </div>
@@ -208,7 +208,7 @@
 </div>
 
 <div class="btn-center pink">
-    <a asp-area="" asp-controller="Movies" asp-action="Index" class="btn btn-lg">Ir al Listado de películas...</a>
+    <a asp-area="" asp-controller="Movies" asp-action="Index" class="btn btn-lg animated infinite bounce">Ir al Listado de películas...</a>
 </div>
 
 <div id="adBanner">

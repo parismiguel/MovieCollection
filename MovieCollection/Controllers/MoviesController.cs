@@ -9,6 +9,10 @@ using MovieCollection.Data;
 using MovieCollection.Models;
 using Microsoft.AspNetCore.Authorization;
 using MovieCollection.Helpers;
+using System.IO;
+using System.Net;
+using SixLabors.ImageSharp;
+using System.Net.Http;
 
 namespace MovieCollection.Controllers
 {
@@ -27,7 +31,8 @@ namespace MovieCollection.Controllers
             ViewData["CurrentSort"] = sortOrder;
             ViewData["TitleSortParm"] = String.IsNullOrEmpty(sortOrder) ? "title_desc" : "";
             ViewData["GenreSortParm"] = sortOrder == "Genre" ? "genre_desc" : "Genre";
-            ViewData["DateSortParm"] = sortOrder == "DatePremiere" ? "datepremiere_desc" : "DatePremiere";
+            ViewData["DatePremiereSortParm"] = sortOrder == "DatePremiere" ? "datepremiere_desc" : "DatePremiere";
+            ViewData["DateCreatedSortParm"] = sortOrder == "DateCreated" ? "datecreated_desc" : "DateCreated";
 
             if (searchString != null)
             {
@@ -67,15 +72,23 @@ namespace MovieCollection.Controllers
                 case "datepremiere_desc":
                     _movies = _movies.OrderByDescending(s => s.DatePremiere);
                     break;
+
+                case "DateCreated":
+                    _movies = _movies.OrderBy(s => s.DateCreated);
+                    break;
+
+                case "datecreated_desc":
+                    _movies = _movies.OrderByDescending(s => s.DateCreated);
+                    break;
                 default:
-                    _movies = _movies.OrderBy(s => s.MovieName);
+                    _movies = _movies.OrderBy(s => s.MovieName).OrderByDescending(s => s.DateCreated);
                     break;
             }
 
             int pageSize = 7;
 
-            var test = await _movies.AsNoTracking().ToListAsync();
-            var test2 = await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize);
+            //var test = await _movies.AsNoTracking().ToListAsync();
+            //var test2 = await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize);
 
             return View(await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize));
         }
@@ -124,14 +137,31 @@ namespace MovieCollection.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Movie movie)
         {
+            ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
+            ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
+            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
+
             if (ModelState.IsValid)
             {
+               
+                if (movie.IdCategory == 2 && movie.IdSerie == null)
+                {
+                    ViewData["ErrorURL"] = String.Format("Para la Categoría SERIES debe seleccionar una de la lista de SERIES o CREAR una nueva");
+                    return View(movie);
+                }
 
                 if (!IsValidUri(movie.ImgURL))
                 {
                     ViewData["ErrorURL"] = String.Format("Imagen: {0} es una URL inválida", movie.ImgURL);
                     return View(movie);
                 }
+
+                if (await IsImageResolutionOK(movie.ImgURL))
+                {
+                    ViewData["ErrorURL"] = String.Format("La calidad de la imágen deben ser mínimo de 600x400");
+                    return View(movie);
+                }
+
 
                 if (!IsValidUri(movie.MegaLink))
                 {
@@ -150,9 +180,6 @@ namespace MovieCollection.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
-            ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
-            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
 
             return View(movie);
         }
@@ -212,6 +239,8 @@ namespace MovieCollection.Controllers
 
                     movie.DateModified = DateTime.Today;
                     movie.UserModified = User.Identity.Name;
+
+
 
                     movie.OuoLink = string.Format("http://ouo.io/s/mcTIrdpj?s={0}", System.Net.WebUtility.UrlEncode(movie.MegaLink));
 
@@ -282,6 +311,30 @@ namespace MovieCollection.Controllers
         {
             Uri validatedUri;
             return Uri.TryCreate(uri, UriKind.RelativeOrAbsolute, out validatedUri);
+        }
+
+        public async Task<bool> IsImageResolutionOK(string imgUrl)
+        {
+
+            using (HttpClient c = new HttpClient())
+            {
+                using (Stream s = await c.GetStreamAsync(imgUrl))
+                {
+                    using (Image<Rgba32> image = Image.Load(s))
+                    {
+                        if (image.Width >= 600 && image.Height >= 400)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+
         }
     }
 }

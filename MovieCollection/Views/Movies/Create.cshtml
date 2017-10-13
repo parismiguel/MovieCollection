@@ -12,7 +12,10 @@
         <h4>Películas y Series</h4>
         <hr />
 
-        <div class="alert alert-danger">@ViewData["ErrorURL"]</div>
+        @if (ViewData["ErrorURL"] != null)
+        {
+            <div class="alert alert-danger">@ViewData["ErrorURL"]</div>
+        }
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -119,7 +122,7 @@
             </div>
         </div>
 
-        <div id="serieGroup" class="hidden">
+        <div id="serieGroup" class="well hidden">
             <div class="form-group">
                 <label asp-for="IdSerie" class="col-md-2 control-label"></label>
                 <div class="col-md-10">
@@ -156,21 +159,25 @@
         
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Grabar" class="btn btn-success" />
+                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Grabar</button>
+                <a asp-action="Index"><i class="fa fa-undo"></i> Regresar al Listado</a>
+
             </div>
         </div>
     </div>
 </form>
 
-<div>
-    <a asp-action="Index">Regresar al Listado</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
         $(function () {
+            if ($("#IdCategory option:selected").text() == "Series") {
+                $("#serieGroup").removeClass("hidden");
+            }
+
+
             $("#IdCategory").on("change", function () {
 
                 if ($("#IdCategory option:selected").text() == "Series") {
