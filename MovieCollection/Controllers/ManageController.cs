@@ -226,17 +226,24 @@ namespace MovieCollection.Controllers
             {
                 return View(model);
             }
+
             var user = await GetCurrentUserAsync();
+
             if (user != null)
             {
                 var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
                     _logger.LogInformation(3, "User changed their password successfully.");
+
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
                 }
+
                 AddErrors(result);
+
                 return View(model);
             }
             return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
@@ -262,15 +269,20 @@ namespace MovieCollection.Controllers
             }
 
             var user = await GetCurrentUserAsync();
+
             if (user != null)
             {
                 var result = await _userManager.AddPasswordAsync(user, model.NewPassword);
+
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
+
                     return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
                 }
+
                 AddErrors(result);
+
                 return View(model);
             }
             return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });

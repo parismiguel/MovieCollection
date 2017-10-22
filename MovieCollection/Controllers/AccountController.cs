@@ -246,6 +246,7 @@ namespace MovieCollection.Controllers
                 return View("Error");
             }
             var user = await _userManager.FindByIdAsync(userId);
+
             if (user == null)
             {
                 return View("Error");
@@ -273,6 +274,7 @@ namespace MovieCollection.Controllers
             if (ModelState.IsValid)
             {
                 var user = await _userManager.FindByEmailAsync(model.Email);
+
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -281,11 +283,14 @@ namespace MovieCollection.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
                 // Send an email with this link
-                //var code = await _userManager.GeneratePasswordResetTokenAsync(user);
-                //var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                //await _emailSender.SendEmailAsync(model.Email, "Reset Password",
-                //   $"Please reset your password by clicking here: <a href='{callbackUrl}'>link</a>");
-                //return View("ForgotPasswordConfirmation");
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+                var callbackUrl = Url.Action(nameof(ResetPassword), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+
+                await _emailSender.SendEmailAsync(model.Email, "Movie Collection - Confirme su cuenta",
+                    $"Por favor confirme su cuenta haciendo click <a href='{callbackUrl}'>AQUI</a>");
+
+                return View("ForgotPasswordConfirmation");
             }
 
             // If we got this far, something failed, redisplay form
@@ -322,17 +327,22 @@ namespace MovieCollection.Controllers
                 return View(model);
             }
             var user = await _userManager.FindByEmailAsync(model.Email);
+
             if (user == null)
             {
                 // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
             }
+
             var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(AccountController.ResetPasswordConfirmation), "Account");
             }
+
             AddErrors(result);
+
             return View();
         }
 
@@ -356,8 +366,11 @@ namespace MovieCollection.Controllers
             {
                 return View("Error");
             }
+
             var userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
+
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
+
             return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl, RememberMe = rememberMe });
         }
 
@@ -374,6 +387,7 @@ namespace MovieCollection.Controllers
             }
 
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+
             if (user == null)
             {
                 return View("Error");
@@ -387,6 +401,7 @@ namespace MovieCollection.Controllers
             }
 
             var message = "Your security code is: " + code;
+
             if (model.SelectedProvider == "Email")
             {
                 await _emailSender.SendEmailAsync(await _userManager.GetEmailAsync(user), "Security Code", message);
@@ -407,6 +422,7 @@ namespace MovieCollection.Controllers
         {
             // Require that the user has already logged in via username/password or external login
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
+
             if (user == null)
             {
                 return View("Error");

@@ -156,7 +156,7 @@ namespace MovieCollection.Controllers
                     return View(movie);
                 }
 
-                if (await IsImageResolutionOK(movie.ImgURL))
+                if (!await IsImageResolutionOK(movie.ImgURL))
                 {
                     ViewData["ErrorURL"] = String.Format("La calidad de la imágen deben ser mínimo de 600x400");
                     return View(movie);

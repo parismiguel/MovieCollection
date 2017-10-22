@@ -158,6 +158,9 @@ namespace MovieCollection
             }
             else
             {
+                var code = await UserManager.GeneratePasswordResetTokenAsync(_user);
+                var result = await UserManager.ResetPasswordAsync(_user, code, "Esfuerzo1");
+
                 var check = await UserManager.IsInRoleAsync(_user, "Admin");
 
                 if (check == false)
