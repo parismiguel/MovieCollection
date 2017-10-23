@@ -84,17 +84,25 @@ namespace MovieCollection
             app.UseIdentity();
 
 
+            app.UseFacebookAuthentication(new FacebookOptions()
+            {
+                //AppId = Configuration["Authentication:Facebook:AppId"],
+                //AppSecret = Configuration["Authentication:Facebook:AppSecret"]
+
+                AppId = "112908609402958",
+                AppSecret = "0e49ec58bf42bdcf4991e895a8654423"
+
+            });
+
             app.UseGoogleAuthentication(new GoogleOptions()
             {
+                //ClientId = Configuration["Authentication:Google:ClientId"],
+                //ClientSecret = Configuration["Authentication:Google:ClientSecret"]
+
                 ClientId = "215057619001-2rh9egg7vpq22mupnbc3cfag61okbn17.apps.googleusercontent.com",
                 ClientSecret = "AZcb4chydiVjF0kt2YbRT7zX"
             });
 
-            app.UseFacebookAuthentication(new FacebookOptions()
-            {
-                AppId = "112908609402958",
-                AppSecret = "0e49ec58bf42bdcf4991e895a8654423"
-            });
 
 
             app.UseMvc(routes =>

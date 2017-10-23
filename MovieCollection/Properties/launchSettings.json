@@ -2,9 +2,13 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/MovieCollection",
+      "sslPort": 0
+    },
     "iisExpress": {
-      "applicationUrl": "https://localhost:44363/",
-      "sslPort": 44363
+      "applicationUrl": "https://localhost:44308/",
+      "sslPort": 44308
     }
   },
   "profiles": {
@@ -16,7 +20,7 @@
       }
     },
     "MovieCollection": {
-      "commandName": "Project",
+      "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

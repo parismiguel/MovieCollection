@@ -50,7 +50,7 @@ namespace MovieCollection.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                _movies = _movies.Where(s => s.MovieName.Contains(searchString))
+                _movies = _movies.Where(s => s.MovieName.Contains(searchString) || s.MovieAlias.Contains(searchString))
                     .OrderByDescending(d => d.DateCreated);
             }
 
