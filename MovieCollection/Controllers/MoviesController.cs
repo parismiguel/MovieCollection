@@ -50,7 +50,7 @@ namespace MovieCollection.Controllers
 
             if (!String.IsNullOrEmpty(searchString))
             {
-                _movies = _movies.Where(s => s.MovieName.Contains(searchString) || s.MovieAlias.Contains(searchString))
+                _movies = _movies.Where(s => s.MovieName.Contains(searchString) || s.MovieAlias.Contains(searchString) || s.Serie.SerieName.Contains(searchString) || s.Serie.OriginalName.Contains(searchString))
                     .OrderByDescending(d => d.DateCreated);
             }
 
@@ -93,6 +93,12 @@ namespace MovieCollection.Controllers
             return View(await PaginatedList<Movie>.CreateAsync(_movies.AsNoTracking(), page ?? 1, pageSize));
         }
 
+
+        public IActionResult Series()
+        {
+
+            return View();
+        }
 
 
         // GET: Movies/Details/5

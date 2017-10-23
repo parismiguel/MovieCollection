@@ -173,21 +173,21 @@
 
     <script>
         $(function () {
-            if ($("#IdCategory option:selected").text() == "Series") {
-                $("#serieGroup").removeClass("hidden");
-            }
-
+            serieInit();
 
             $("#IdCategory").on("change", function () {
-
-                if ($("#IdCategory option:selected").text() == "Series") {
-                    $("#serieGroup").removeClass("hidden");
-                }
-                else {
-                    $("#serieGroup").addClass("hidden");
-                }
+                serieInit();
             })
 
         }) //End Init
+
+        function serieInit() {
+            if ($("#IdCategory option:selected").text() == "Series") {
+                $("#serieGroup").removeClass("hidden");
+            }
+            else {
+                $("#serieGroup").addClass("hidden");
+            }
+        }
     </script>
 }
