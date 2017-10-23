@@ -4,12 +4,14 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81;</PackageTargetFallback>
     <UserSecretsId>aspnet-MovieCollection-DA0CE9F9-F90B-46AE-ABB2-716FBBBBB779</UserSecretsId>
+    <ApplicationInsightsAnnotationResourceId>/subscriptions/abed4501-f235-4954-8311-b0780f45caf5/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/MovieCollection</ApplicationInsightsAnnotationResourceId>
+    <ApplicationInsightsResourceId>/subscriptions/3551f055-e0be-45ef-b461-843018cf4a6f/resourcegroups/Default-ApplicationInsights-EastUS/providers/microsoft.insights/components/MovieCollection</ApplicationInsightsResourceId>
   </PropertyGroup>
 
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="1.18.1.1" />
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.1.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="1.1.2" />
@@ -34,6 +36,10 @@
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.1" />
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
 </Project>
