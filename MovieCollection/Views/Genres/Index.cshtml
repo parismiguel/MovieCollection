@@ -1,17 +1,29 @@
-@model IEnumerable<MovieCollection.Models.Genre>
+﻿@model IEnumerable<Genre>
 
-@{
-    ViewData["Title"] = "Index";
+@section Styles {
+    <style type="text/css">
+        table img {
+            height: 90px;
+            width: 150px;
+        }
+    </style>
 }
 
-<h2>Index</h2>
+@{
+    ViewData["Title"] = "Listado de Géneros";
+}
+
+<h2>@ViewData["Title"]</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create"><i class="fa fa-plus-circle"></i> Nuevo</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImgURL)
+            </th>
                 <th>
                     @Html.DisplayNameFor(model => model.GenreName)
                 </th>
@@ -21,13 +33,16 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <th>
+                <img src="@Html.DisplayFor(modelItem => item.ImgURL)" alt="@Html.DisplayFor(modelItem => item.GenreName)" />
+            </th>
             <td>
                 @Html.DisplayFor(modelItem => item.GenreName)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdGenre">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdGenre">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdGenre">Delete</a>
+                <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.IdGenre"><i class="fa fa-pencil"></i> Editar</a>
+                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.IdGenre"><i class="fa fa-eye"></i> Detalles</a>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.IdGenre"><i class="fa fa-trash"></i> Borrar</a>
             </td>
         </tr>
 }

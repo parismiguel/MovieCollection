@@ -25,6 +25,12 @@ namespace MovieCollection.Controllers
             return View(await _context.Genres.ToListAsync());
         }
 
+        [HttpGet]
+        public JsonResult GetGenres()
+        {
+            return Json(_context.Genres.ToList());
+        }
+
         // GET: Genres/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -54,7 +60,7 @@ namespace MovieCollection.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdGenre,GenreName")] Genre genre)
+        public async Task<IActionResult> Create(Genre genre)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +92,7 @@ namespace MovieCollection.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdGenre,GenreName")] Genre genre)
+        public async Task<IActionResult> Edit(int id, Genre genre)
         {
             if (id != genre.IdGenre)
             {
