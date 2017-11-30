@@ -68,3 +68,14 @@ textarea {
         display: none;
     }
 }
+
+#chatBot {
+    border: none;
+    height: 470px;
+    width: 370px;
+    position: fixed;
+    right: .5rem;
+    bottom: .5rem;
+    z-index: 999;
+    background-color: white;
+}
