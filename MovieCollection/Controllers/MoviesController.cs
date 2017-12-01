@@ -100,6 +100,32 @@ namespace MovieCollection.Controllers
             return View();
         }
 
+        [HttpGet]
+        public JsonResult GetMovies()
+        {
+            var model = _context.Movies.OrderByDescending(d => d.DateCreated); ;
+
+
+            //if (!string.IsNullOrEmpty(categoryName))
+            //{
+            //    var genreId = _context.Genres.Where(x => x.GenreName == categoryName).Select(x=>x.IdGenre).FirstOrDefault();
+
+            //    model.Where(x => x.IdGenre == genreId);
+            //}
+
+            return Json(model.AsNoTracking().ToList());
+        }
+
+        [HttpGet]
+        public JsonResult GetGenreId(string categoryName)
+        {
+
+                var genreId = _context.Genres.Where(x => x.GenreName == categoryName).FirstOrDefault().IdGenre.ToString();
+
+                return Json(genreId);
+
+        }
+
 
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
