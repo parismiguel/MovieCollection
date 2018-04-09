@@ -120,6 +120,9 @@ namespace MovieCollection.Models
         [Display(Name = "Género")]
         public string GenreName { get; set; }
 
+        [Display(Name = "Imágen URL")]
+        public string ImgURL { get; set; }
+
         public IEnumerable<Movie> Movies { get; set; }
     }
 
