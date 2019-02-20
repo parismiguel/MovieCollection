@@ -1,7 +1,7 @@
-@model MovieCollection.Models.Genre
+﻿@model MovieCollection.Models.Genre
 
 @{
-    ViewData["Title"] = "Nuevo G�nero";
+    ViewData["Title"] = "Nuevo Género";
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -18,6 +18,15 @@
                 <span asp-validation-for="GenreName" class="text-danger"></span>
             </div>
         </div>
+
+        <div class="form-group">
+            <label asp-for="ImgURL" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="ImgURL" class="form-control" />
+                <span asp-validation-for="ImgURL" class="text-danger"></span>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Grabar</button>

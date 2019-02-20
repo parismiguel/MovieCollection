@@ -1,15 +1,27 @@
 ﻿@model MovieCollection.Models.Movie
 
 @section Styles{
-    <style>
+    <style type="text/css">
         dd {
-            margin-bottom:1rem;
+            margin-bottom: 1rem;
         }
 
-        dd > img {
-            width: 10rem;
-        }
+            dd > img {
+                width: 100%;
+                max-width: 13rem;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: 0.3s;
+            }
     </style>
+
+    <link href="~/css/modal.css" rel="stylesheet" />
+
+    <meta property="og:url" content="https://moviecollection.azurewebsites.net/Movies/Details/@Model.IdMovie" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="@Model.MovieName" />
+    <meta property="og:description" content="@Model.Description" />
+    <meta property="og:image" content="@Model.ImgURL" />
 }
 
 @{
@@ -21,6 +33,11 @@
 <div>
     <h4>Información detallada del Título</h4>
     <hr />
+
+    <div class="fb-share-button" data-href="https://moviecollection.azurewebsites.net/Movies/Details/@Model.IdMovie" data-layout="button_count" data-size="small" data-mobile-iframe="true">
+        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fmoviecollection.azurewebsites.net%2FMovies%2FDetails%2F@Model.IdMovie&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a>
+    </div>
+
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.MovieName)
@@ -29,15 +46,15 @@
             @Html.DisplayFor(model => model.MovieName)
         </dd>
 
-       @if (Model.MovieAlias != null)
-       {
-        <dt>
-            @Html.DisplayNameFor(model => model.MovieAlias)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.MovieAlias)
-        </dd>
-       }
+        @if (Model.MovieAlias != null)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.MovieAlias)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.MovieAlias)
+            </dd>
+        }
 
         <dt>
             @Html.DisplayNameFor(model => model.MovieSequel)
@@ -67,7 +84,7 @@
                 @Html.DisplayFor(model => model.Season) / @Html.DisplayFor(model => model.Episode)
             </dd>
         }
-      
+
 
         <dt>
             @Html.DisplayNameFor(model => model.Genre.GenreName)
@@ -85,7 +102,7 @@
             @Html.DisplayNameFor(model => model.ImgURL)
         </dt>
         <dd>
-            <img src="@Html.DisplayFor(model => model.ImgURL)" alt="@Html.DisplayFor(model => model.MovieName)" />
+            <img id="myImg" src="@Html.DisplayFor(model => model.ImgURL)" alt="@Html.DisplayFor(model => model.MovieName)" />
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.DatePremiere)
@@ -94,12 +111,13 @@
             @String.Format("{0:dd-MMM-yyyy}", Model.DatePremiere)
             @*@Html.DisplayFor(model => model.DatePremiere)*@
         </dd>
-      
+
         <dt>
             Link
         </dt>
         <dd>
             <a class="btn btn-danger" target="_blank" href="@Html.DisplayFor(model => model.OuoLink)"><i class="fa fa-cloud-download"></i> Descargar</a>
+            <a href="m.me/megacoleccionvideos"><i class="fa fa-link"></i> Reportar link roto</a>
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.SpokenLanguage)
@@ -125,14 +143,120 @@
         <dd>
             @Html.DisplayFor(model => model.Resolution)
         </dd>
-      
+
     </dl>
 </div>
 <div>
-   @if (User.IsInRole("Admin"))
-   {
-        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdMovie"><i class="fa fa-pencil"></i> Editar</a>
-    }
     <a asp-action="Index"><i class="fa fa-undo"></i> Regresar al Listado</a>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@Model.IdMovie"><i class="fa fa-pencil"></i> Editar</a>
+        <button type="button" class="btn btn-sm btn-primary" onclick="PublishToFanPage()" style="margin-left:2rem;">
+            <i class="fa fa-pencil"></i>
+            <span>Publicar</span>
+        </button>
+    }
+
 </div>
 <hr />
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- The Close Button -->
+    <span class="close">&times;</span>
+
+    <!-- Modal Content (The Image) -->
+    <img class="modal-content" id="img01">
+
+    <!-- Modal Caption (Image Text) -->
+    <div id="caption"></div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        var img = document.getElementById('myImg');
+        var modalImg = document.getElementById("img01");
+        var captionText = document.getElementById("caption");
+
+        img.onclick = function () {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            captionText.innerHTML = this.alt;
+        }
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        function OpenGraph() {
+            FB.ui({
+                method: 'share_open_graph',
+                action_type: 'og.likes',
+                action_properties: JSON.stringify({
+                    object: 'https://moviecollection.azurewebsites.net/Movies/Details/@Model.IdMovie',
+                })
+            }, function (response) {
+                // Debug response (optional)
+                console.log(response);
+            });
+        }
+
+        function Login() {
+            FB.login(function (response) {
+                if (response.authResponse) {
+                    console.log('Bienvenido!  Cargando su información.... ');
+                    FB.api('/me', function (response) {
+                        console.log('Que bueno volver a verte, ' + response.name + '!');
+                        NotificationToast("success", 'Que bueno volver a verte, ' + response.name + '!', 'Login');
+                    });
+                } else {
+                    console.log('Usuario canceló el Login o no cuenta con los permisos suficientes.');
+                }
+            });
+        }
+
+        function PublishToFanPage() {
+            //https://developers.facebook.com/docs/pages/publishing/#post
+            //https://developers.facebook.com/docs/javascript/reference/FB.api
+            //https://developers.facebook.com/docs/reference/javascript/FB.login/v3.2
+            //https://developers.facebook.com/docs/facebook-login/access-tokens/?locale=es_LA#pagetokens
+
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    var userToken = response.authResponse.accessToken;
+
+                    FB.api('/350603012047051?fields=access_token,category,name,category_list', function (response) {
+                        console.log(response);
+                        var pageToken = response.access_token;
+
+                        var msg = {
+                            message: '@Model.MovieName',
+                            link: 'https://moviecollection.azurewebsites.net/Movies/Details/@Model.IdMovie',
+                            access_token: pageToken
+                        };
+
+                        FB.api('/350603012047051/feed', 'post', msg, function (response) {
+                            if (!response || response.error) {
+                                NotificationToast("error", response.error.message, "Error");
+                            } else {
+                                NotificationToast("success", 'Post ID: ' + response.id, "Publicar");
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+
+    </script>
+}

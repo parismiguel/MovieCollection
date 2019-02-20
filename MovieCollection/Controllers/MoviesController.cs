@@ -13,6 +13,7 @@ using System.IO;
 using System.Net;
 using SixLabors.ImageSharp;
 using System.Net.Http;
+using System.Diagnostics;
 
 namespace MovieCollection.Controllers
 {
@@ -22,7 +23,7 @@ namespace MovieCollection.Controllers
 
         public MoviesController(ApplicationDbContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Movies
@@ -120,9 +121,9 @@ namespace MovieCollection.Controllers
         public JsonResult GetGenreId(string categoryName)
         {
 
-                var genreId = _context.Genres.Where(x => x.GenreName == categoryName).FirstOrDefault().IdGenre.ToString();
+            var genreId = _context.Genres.Where(x => x.GenreName == categoryName).FirstOrDefault().IdGenre.ToString();
 
-                return Json(genreId);
+            return Json(genreId);
 
         }
 
@@ -169,47 +170,57 @@ namespace MovieCollection.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(Movie movie)
         {
-            ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
-            ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
-            ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
-
-            if (ModelState.IsValid)
+            try
             {
-               
-                if (movie.IdCategory == 2 && movie.IdSerie == null)
+                ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "CategoryName", movie.IdCategory);
+                ViewData["IdGenre"] = new SelectList(_context.Genres, "IdGenre", "GenreName", movie.IdGenre);
+                ViewData["IdSerie"] = new SelectList(_context.Series, "IdSerie", "SerieName", movie.IdSerie);
+
+                if (ModelState.IsValid)
                 {
-                    ViewData["ErrorURL"] = String.Format("Para la Categoría SERIES debe seleccionar una de la lista de SERIES o CREAR una nueva");
-                    return View(movie);
+
+                    if (movie.IdCategory == 2 && movie.IdSerie == null)
+                    {
+                        ViewData["ErrorURL"] = string.Format("Para la Categoría SERIES debe seleccionar una de la lista de SERIES o CREAR una nueva.");
+                        return View(movie);
+                    }
+
+                    if (!IsValidUri(movie.ImgURL))
+                    {
+                        ViewData["ErrorURL"] = string.Format("Imagen: {0} es una URL inválida", movie.ImgURL);
+                        return View(movie);
+                    }
+
+                    if (!await IsImageResolutionOK(movie.ImgURL))
+                    {
+                        ViewData["ErrorURL"] = string.Format("La calidad de la imágen deben ser mínimo de 600x400 o no es una extensión válida.");
+                        return View(movie);
+                    }
+
+
+                    if (!IsValidUri(movie.MegaLink))
+                    {
+                        ViewData["ErrorURL"] += string.Format("Mega: {0} es una URL inválida", movie.MegaLink);
+
+                        return View(movie);
+                    }
+
+                    movie.UserCreated = User.Identity.Name;
+                    movie.UserModified = User.Identity.Name;
+
+                    movie.OuoLink = string.Format("http://ouo.io/s/mcTIrdpj?s={0}", WebUtility.UrlEncode(movie.MegaLink));
+
+                    _context.Add(movie);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index");
                 }
 
-                if (!IsValidUri(movie.ImgURL))
-                {
-                    ViewData["ErrorURL"] = String.Format("Imagen: {0} es una URL inválida", movie.ImgURL);
-                    return View(movie);
-                }
 
-                if (!await IsImageResolutionOK(movie.ImgURL))
-                {
-                    ViewData["ErrorURL"] = String.Format("La calidad de la imágen deben ser mínimo de 600x400");
-                    return View(movie);
-                }
-
-
-                if (!IsValidUri(movie.MegaLink))
-                {
-                    ViewData["ErrorURL"] += String.Format("Mega: {0} es una URL inválida", movie.MegaLink);
-
-                    return View(movie);
-                }
-
-                movie.UserCreated = User.Identity.Name;
-                movie.UserModified = User.Identity.Name;
-
-                movie.OuoLink = string.Format("http://ouo.io/s/mcTIrdpj?s={0}", System.Net.WebUtility.UrlEncode(movie.MegaLink));
-
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                ViewData["ErrorURL"] += string.Format("Error: {0}.", ex.Message);
             }
 
 
@@ -347,25 +358,29 @@ namespace MovieCollection.Controllers
 
         public async Task<bool> IsImageResolutionOK(string imgUrl)
         {
-
-            using (HttpClient c = new HttpClient())
+            try
             {
-                using (Stream s = await c.GetStreamAsync(imgUrl))
+                using (HttpClient c = new HttpClient())
                 {
-                    using (Image<Rgba32> image = Image.Load(s))
+                    using (Stream s = await c.GetStreamAsync(imgUrl))
                     {
-                        if (image.Width >= 600 && image.Height >= 400)
+                        using (Image<Rgba32> image = Image.Load(s))
                         {
-                            return true;
-                        }
-                        else
-                        {
-                            return false;
+                            if (image.Width >= 600 && image.Height >= 400)
+                            {
+                                return true;
+                            }
+
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
 
+            return false;
 
         }
     }
